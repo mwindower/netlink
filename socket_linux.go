@@ -173,7 +173,7 @@ func SocketGet(local, remote net.Addr) (*Socket, error) {
 }
 
 // SocketDiagTCPInfo requests INET_DIAG_INFO for TCP protocol for specified family type.
-func SocketDiagTCPInfo(family uint8) ([]*InetDiagTCPInfoResp, error) {
+func SocketDiagTCPInfo(family uint8, states uint32) ([]*InetDiagTCPInfoResp, error) {
 	s, err := nl.Subscribe(unix.NETLINK_INET_DIAG)
 	if err != nil {
 		return nil, err
@@ -185,7 +185,7 @@ func SocketDiagTCPInfo(family uint8) ([]*InetDiagTCPInfoResp, error) {
 		Family:   family,
 		Protocol: unix.IPPROTO_TCP,
 		Ext:      INET_DIAG_INFO,
-		States:   uint32(0xfff), // All TCP states
+		States:   states, // All TCP states
 	})
 	s.Send(req)
 
